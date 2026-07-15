@@ -11,9 +11,11 @@ CLI tool to search, fetch, and crawl `.onion` hidden services through the Tor ne
 Optional — renders JavaScript-heavy .onion sites:
 - `google-chrome` (any Chromium-based browser)
 
-## Install
+## Quick Install
 
 ```bash
+git clone https://github.com/23f3002964/darknet-tor-search.git
+cd darknet-tor-search
 pip install -r requirements.txt
 chmod +x darksearch.py
 ```
@@ -61,13 +63,55 @@ chmod +x darksearch.py
 ./darksearch.py status
 ```
 
-### MCP Server (for LLM tools like opencode)
+### MCP Server (AI agent integration)
+
+Run standalone:
 
 ```bash
 python3 mcp_server.py
 ```
 
 Registers three tools: `darknet_fetch`, `darknet_search`, `darknet_status`.
+
+#### Integrate with opencode
+
+Add to your `opencode.jsonc` (project-level or `~/.config/opencode/opencode.jsonc`):
+
+```jsonc
+"mcp": {
+  "darksearch": {
+    "type": "local",
+    "enabled": true,
+    "command": "python3",
+    "args": ["/path/to/darknet-tor-search/mcp_server.py"],
+    "description": "Darknet .onion fetch, search, and crawl via Tor SOCKS5"
+  }
+}
+```
+
+#### Integrate with Claude Code
+
+Add to your `~/.claude/claude.json`:
+
+```json
+{
+  "mcpServers": {
+    "darksearch": {
+      "command": "python3",
+      "args": ["/path/to/darknet-tor-search/mcp_server.py"]
+    }
+  }
+}
+```
+
+#### Integrate with any MCP-compatible client
+
+All MCP clients use the same pattern — point them to:
+
+```
+command: python3
+args: [/path/to/darknet-tor-search/mcp_server.py]
+```
 
 ## Database
 
